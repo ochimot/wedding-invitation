@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import InvitationHeader from '@/components/InvitationHeader';
 import GuestWishForm from '@/components/GuestWishForm';
@@ -9,7 +9,7 @@ import BackgroundMusic from '@/components/BackgroundMusic';
 import FloatingHearts from '@/components/FloatingHearts';
 import { motion } from 'framer-motion';
 
-export default function InvitationPage() {
+function InvitationContent() {
   const [refreshWishes, setRefreshWishes] = useState(0);
   const searchParams = useSearchParams();
   const mode = searchParams.get('mode') || 'groom';
@@ -156,5 +156,26 @@ export default function InvitationPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function InvitationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100">
+        <div className="relative w-24 h-24">
+          {/* Outer ring */}
+          <div className="absolute inset-0 border-4 border-pink-200 rounded-full animate-ping"></div>
+          {/* Middle ring */}
+          <div className="absolute inset-2 border-4 border-purple-300 rounded-full animate-spin"></div>
+          {/* Inner hearts */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-4xl animate-pulse">💕</div>
+          </div>
+        </div>
+      </div>
+    }>
+      <InvitationContent />
+    </Suspense>
   );
 }
